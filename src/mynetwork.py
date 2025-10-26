@@ -87,6 +87,7 @@ class MyNetwork():
         # Step 3: compute final score of network over testing data
         final_score = self.score()
         print(f"Network performance: {final_score}")
+        return W1, W2, b1, b2
 
     def forwardprop(self, input, weight, bias):
         return input @ weight + bias
@@ -130,3 +131,11 @@ class MyNetwork():
     
     def relu_derivative(self, z):
         return np.where(z > 0, 1, 0)
+    
+    def predict(self, X):
+        Z1 = self.forwardprop(X, self.W1, self.b1)
+        A1 = self.relu(Z1)
+        Z2 = self.forwardprop(A1, self.W2, self.b2)
+        A2 = self.sigmoid(Z2)
+        prediction = np.argmax(A2, axis=1)[0]
+        return prediction

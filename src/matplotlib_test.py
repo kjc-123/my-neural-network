@@ -3,11 +3,16 @@ import random
 
 import numpy as np
 #import matplotlib.pyplot
+import mynetwork
 import matplotlib.pyplot as plt
 
 ld = loader.loader()
 
 X_train, y_train = ld.load_data("data/mnist_train.csv")
+X_test, y_test = ld.load_data("data/mnist_test.csv")
+
+net = mynetwork.MyNetwork()
+W1, W2, b1, b2 = net.sgd()
 
 nrows = 5
 ncols = 5
@@ -15,12 +20,13 @@ fig, axes = plt.subplots(nrows=nrows, ncols=ncols)
 
 for i in range(0,nrows):
     for j in range(0,ncols):
-        index = random.randint(0, 60000)
-        image = X_train[index]
+        index = random.randint(0, 10000)
+        image = X_test[index]
         image = np.reshape(image, shape=(28, 28))
         axes[i,j].imshow(image, cmap='gray')
-        predicted = str(np.where(y_train[index] == 1.0)[0][0]) # TODO: put model prediction here
-        title = "Predicted: " + predicted + " | Actual: " + str(np.where(y_train[index] == 1.0)[0][0])
+        #predicted = str(np.where(y_train[index] == 1.0)[0][0]) # TODO: put model prediction here
+        predicted = str(net.predict(X_test[index]))
+        title = "Predicted: " + predicted + " | Actual: " + str(np.where(y_test[index] == 1.0)[0][0])
         axes[i,j].set_title(title, fontsize=8)
 
 '''for i in range(0, 5):
