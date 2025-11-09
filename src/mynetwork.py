@@ -11,10 +11,9 @@ class MyNetwork():
      
     # Step 1: initialize weights and biases
     # TODO: generalize size and number of hidden layers
-    # TODO: fix dimensions (they're all backwards lol)
     # TODO: take code out of sgd() and put into other functions
     # He initialization
-    W1 = np.random.randn(784, 16) * np.sqrt(2.0 / 784) # randn is standard normal distribution Z ~ N(0, 1)
+    W1 = np.random.randn(784, 16) * np.sqrt(2.0 / 784)
     W2 = np.random.randn(16, 10) * np.sqrt(2.0 / 16)
     b1 = np.zeros([1, 16])
     b2 = np.zeros([1, 10])
@@ -55,9 +54,10 @@ class MyNetwork():
             y_batch = self.y_train[i0:il]
 
             # Step 2b: forward pass
-            Z1 = self.forwardprop(X_batch, W1, np.ones([m,1]) @ b1)
+            Z1 = self.forwardprop(X_batch, W1, b1)
             A1 = self.relu(Z1)
-            Z2 = self.forwardprop(A1, W2, np.ones([m,1]) @ b2)
+            Z2 = self.forwardprop(A1, W2, b2)
+            # use softmax TODO
             A2 = self.sigmoid(Z2)
 
             # Step 2c: backward pass
@@ -103,29 +103,22 @@ class MyNetwork():
         labels = np.argmax(self.y_test, axis=1)
         
         return np.mean(predictions == labels)
-
-        '''correct = 0
-        total = 0
-        for x in self.X_test:
-            h1 = self.forwardprop(x, self.W1, self.b1)
-            h1 = self.relu(h1)
-            #h2 = self.forwardprop(h1, self.W2, self.b2)
-            y = self.forwardprop(h1, self.W3, self.b3)
-            y = self.sigmoid(y)
-            y = np.argmax(y) # what the model thinks it is
-            yhat = np.where(self.y_test[total] == 1)[0] # what it actually is
-            if y == yhat:
-                correct = correct + 1
-            total = total + 1
-        return correct / total'''
     
     def cost(self, observed, expected):
         return np.sum((observed - expected) ** 2) / 2 # yhat is observed, y is expected
+    
     
     def sigmoid(self, z):
         z = np.where(z > -709, z, -709) # prevents overflow encountered in exp lol
         return 1 / (1 + np.exp(-z))
     
+    def softmax(self, z):
+        z = np.where(z > -709, z, -709) # prevents overflow from exp(-709)
+        #denominator = np.sum(z)
+        #if denominator == 0:
+        #    denominator = 0.01
+        return np.exp(z) / sum(z)
+
     def relu(self, z):
         return np.where(z > 0, z, 0)
     
@@ -139,3 +132,17 @@ class MyNetwork():
         A2 = self.sigmoid(Z2)
         prediction = np.argmax(A2, axis=1)[0]
         return prediction
+    
+    def predict(self, X, W1, W2, b1, b2):
+        Z1 = self.forwardprop(X, W1, b1)
+        A1 = self.relu(Z1)
+        Z2 = self.forwardprop(A1, W2, b2)
+        A2 = self.sigmoid(Z2)
+        prediction = np.argmax(A2, axis=1)[0]
+        return prediction
+    
+    def save(self):
+        np.save('parameters/W1.npy', self.W1)
+        np.save('parameters/W2.npy', self.W2)
+        np.save('parameters/b1.npy', self.b1)
+        np.save('parameters/b2.npy', self.b2)

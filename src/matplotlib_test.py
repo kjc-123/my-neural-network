@@ -12,7 +12,12 @@ X_train, y_train = ld.load_data("data/mnist_train.csv")
 X_test, y_test = ld.load_data("data/mnist_test.csv")
 
 net = mynetwork.MyNetwork()
-W1, W2, b1, b2 = net.sgd()
+W1 = np.load('parameters/W1.npy')
+W2 = np.load('parameters/W2.npy')
+b1 = np.load('parameters/b1.npy')
+b2 = np.load('parameters/b2.npy')
+
+print(W1.shape)
 
 nrows = 5
 ncols = 5
@@ -24,8 +29,8 @@ for i in range(0,nrows):
         image = X_test[index]
         image = np.reshape(image, shape=(28, 28))
         axes[i,j].imshow(image, cmap='gray')
-        #predicted = str(np.where(y_train[index] == 1.0)[0][0]) # TODO: put model prediction here
-        predicted = str(net.predict(X_test[index]))
+        #predicted = str(net.predict(X_test[index])) # TODO: use W1, W2, b1, b2
+        predicted = str(net.predict(X_test[index], W1, W2, b1, b2)) # TODO: use W1, W2, b1, b2
         title = "Predicted: " + predicted + " | Actual: " + str(np.where(y_test[index] == 1.0)[0][0])
         axes[i,j].set_title(title, fontsize=8)
 

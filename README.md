@@ -1,5 +1,5 @@
 # Neural Network Implementation
-Simple neural network with one hidden layer training on MNIST
+Neural network with one hidden layer training on MNIST
 
 Done out of my personal curiosity
 
@@ -15,8 +15,6 @@ Special thanks goes to 3blue1brown for his series on Neural Networks, which is h
 Github repo for Michael Nielsen's NN implementation: https://github.com/mnielsen/neural-networks-and-deep-learning
 
 TODO:
-- [ ] Fix dimensions to standard
-- [ ] Save weights and biases
 - [ ] Generalize number of hidden layers
 - [ ] Generalize neurons in each layer
 - [ ] Clean up tests
